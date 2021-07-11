@@ -68,7 +68,8 @@ public class Avito {
 
     @Тогда("^открылась страница результаты по запросу ([А-я]+)$")
     public void открыласьСтраницаРезультатыПоЗапросуПринтер(String product) {
-        
+        WebElement searchQuery = driver.findElement(By.cssSelector("[data-marker=\"page-title/text\"]"));
+        assert searchQuery.getText().contains("«" + product + "»");
     }
 
     @И("активирован чекбокс только с фотографией")
@@ -97,6 +98,8 @@ public class Avito {
     @И("в консоль выведено значение названия и цены {int} первых товаров")
     public void вКонсольВыведеноЗначениеНазванияИЦеныПервыхТоваров(int count) {
         List<WebElement> searchResults = driver.findElements(By.xpath("//div[@data-marker=\"item\"]"));
+        assert count <= searchResults.size() : "An attempt to output " + count + " records, " +
+                "but " + searchResults.size() + " are available.";
         for (int i = 0; i < count; ++i) {
             WebElement printerName = searchResults.get(i).findElement(By.cssSelector("[data-marker^=\"item-title\"]"));
             System.out.println("Printer: " + printerName.getText());
