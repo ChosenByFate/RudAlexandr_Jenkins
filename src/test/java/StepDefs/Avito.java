@@ -19,7 +19,7 @@ public class Avito {
 
     @Пусть("открыт ресурс авито")
     public void открытРесурсАвито() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Selenium\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driver = new ChromeDriver();
         driver.get("https://avito.ru");
         driver.manage().window().maximize();
@@ -35,50 +35,58 @@ public class Avito {
 
     @И("в выпадающем списке категорий выбрана {parseCategory}")
     public void вВыпадающемСпискеКатегорийВыбранаОртехника(Category category) {
-        Select categories = new Select(driver.findElement(By.id("category")));
+        By by = By.id("category");
+        Select categories = new Select(driver.findElement(by));
         categories.selectByVisibleText(category.getCategory());
     }
 
     @И("^в поле поиска введено значение ([А-я]+)$")
     public void вПолеПоискаВведеноЗначениеПринтер(String product) {
-        WebElement search = driver.findElement(By.xpath("//input[@data-marker=\"search-form/suggest\"]"));
+        By by = By.xpath("//input[@data-marker=\"search-form/suggest\"]");
+        WebElement search = driver.findElement(by);
         search.sendKeys(product);
     }
 
     @Тогда("кликнуть по выпадающему списку региона")
     public void кликнутьПоВыпадающемуСпискуРегиона() {
-        WebElement sity = driver.findElement(By.xpath("//div[@data-marker=\"search-form/region\"]"));
-        sity.click();
+        By by = By.xpath("//div[@data-marker=\"search-form/region\"]");
+        WebElement city = driver.findElement(by);
+        city.click();
     }
 
     @Тогда("^в поле регион введено значение ([А-я]+)$")
     public void вПолеРегионВведеноЗначениеВладивосток(String city) {
-        WebElement sityFind = driver.findElement(By.xpath("//input[@placeholder=\"Город, регион или Россия\"]"));
-        sityFind.sendKeys(city);
+        By by = By.xpath("//input[@placeholder=\"Город, регион или Россия\"]");
+        WebElement cityFind = driver.findElement(by);
+        cityFind.sendKeys(city);
 
-        List<WebElement> sitySelect = driver.findElements(By.xpath("//strong"));
-        sitySelect.get(0).click();
+        by = By.xpath("//strong");
+        List<WebElement> citySelect = driver.findElements(by);
+        citySelect.get(0).click();
     }
 
     @И("нажата кнопка показать объявления")
     public void нажатаКнопкаПоказатьОбъявления() {
-        WebElement btnFind = driver.findElement(By.xpath("//button[@data-marker=\"popup-location/save-button\"]"));
+        By by = By.xpath("//button[@data-marker=\"popup-location/save-button\"]");
+        WebElement btnFind = driver.findElement(by);
         btnFind.click();
     }
 
     @Тогда("^открылась страница результаты по запросу ([А-я]+)$")
     public void открыласьСтраницаРезультатыПоЗапросуПринтер(String product) {
-        WebElement searchQuery = driver.findElement(By.cssSelector("[data-marker=\"page-title/text\"]"));
+        By by = By.cssSelector("[data-marker=\"page-title/text\"]");
+        WebElement searchQuery = driver.findElement(by);
         assert searchQuery.getText().contains("«" + product + "»");
     }
 
     @И("активирован чекбокс только с фотографией")
     public void активированЧекбоксТолькоСФотографией() {
-        WebElement chkBox = driver.findElement(By.xpath("//label[@data-marker=\"delivery-filter\"]" +
-                "/input[@type=\"checkbox\"]"));
+        By by = By.xpath("//label[@data-marker=\"delivery-filter\"]/input[@type=\"checkbox\"]");
+        WebElement chkBox = driver.findElement(by);
         if (!chkBox.isSelected() && chkBox.isEnabled()) {
             chkBox.sendKeys(Keys.SPACE);
-            WebElement btnFind2 = driver.findElement(By.xpath("//button[@data-marker=\"search-filters/submit-button\"]"));
+            by = By.xpath("//button[@data-marker=\"search-filters/submit-button\"]");
+            WebElement btnFind2 = driver.findElement(by);
             btnFind2.click();
         }
     }
@@ -91,19 +99,23 @@ public class Avito {
 
     @И("в выпадающем списке сортировка выбрано значение {parseOrder}")
     public void вВыпадающемСпискеСортировкаВыбраноЗначениеДороже(Order order) {
-        Select price = new Select(driver.findElement(By.cssSelector("[class^=\"sort-select\"]>[class^=\"select-select\"]")));
+        By by = By.cssSelector("[class^=\"sort-select\"]>[class^=\"select-select\"]");
+        Select price = new Select(driver.findElement(by));
         price.selectByIndex(order.getId());
     }
 
     @И("в консоль выведено значение названия и цены {int} первых товаров")
     public void вКонсольВыведеноЗначениеНазванияИЦеныПервыхТоваров(int count) {
-        List<WebElement> searchResults = driver.findElements(By.xpath("//div[@data-marker=\"item\"]"));
+        By by = By.xpath("//div[@data-marker=\"item\"]");
+        List<WebElement> searchResults = driver.findElements(by);
         assert count <= searchResults.size() : "An attempt to output " + count + " records, " +
                 "but " + searchResults.size() + " are available.";
         for (int i = 0; i < count; ++i) {
-            WebElement printerName = searchResults.get(i).findElement(By.cssSelector("[data-marker^=\"item-title\"]"));
+            by = By.cssSelector("[data-marker^=\"item-title\"]");
+            WebElement printerName = searchResults.get(i).findElement(by);
             System.out.println("Printer: " + printerName.getText());
-            WebElement printerPrice = searchResults.get(i).findElement(By.cssSelector("[class^=\"price-text-\"]"));
+            by = By.cssSelector("[class^=\"price-text-\"]");
+            WebElement printerPrice = searchResults.get(i).findElement(by);
             System.out.println("Price: " + printerPrice.getText());
         }
 
