@@ -81,13 +81,13 @@ public class Avito {
 
     @И("активирован чекбокс только с фотографией")
     public void активированЧекбоксТолькоСФотографией() {
-        By by = By.xpath("//label[@data-marker=\"delivery-filter\"]/input[@type=\"checkbox\"]");
+        By by = By.xpath("//input[@data-marker=\"search-form/with-images\"]");
         WebElement chkBox = driver.findElement(by);
         if (!chkBox.isSelected() && chkBox.isEnabled()) {
             chkBox.sendKeys(Keys.SPACE);
+            chkBox.sendKeys(Keys.PAGE_DOWN);
             by = By.xpath("//button[@data-marker=\"search-filters/submit-button\"]");
-            WebElement btnFind2 = driver.findElement(by);
-            btnFind2.click();
+            driver.findElement(by).click();
         }
     }
 
